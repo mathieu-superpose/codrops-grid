@@ -1,6 +1,6 @@
-# React Three Fiber Starter
+# Codrops Grid
 
-A minimal react three fiber starter for simple projects
+An adaptation of [Codrops tutorial](https://tympanus.net/codrops/2025/03/18/building-an-interactive-image-grid-with-three-js/) with React Three Fiber
 
 ## Technology
 
