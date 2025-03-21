@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react"
+import { use, useMemo, useRef } from "react"
 import * as THREE from "three"
 
 import { useCursorPosition } from "../../hooks/useCursorPosition"
@@ -45,6 +45,10 @@ function Card({
   width: number
   height: number
 }) {
+  const initialPosition = useMemo(() => {
+    return new THREE.Vector3(0.0, 0.5, 0.5)
+  }, [])
+
   const aspect = width / height
   const meshRef = useRef<THREE.Mesh>(null)
 
@@ -65,8 +69,8 @@ function Card({
 
   const cursorPosition = useCursorPosition()
 
-  const position = useMemo(() => {
-    return new THREE.Vector3(x + width / 2, y + height / 2, 0)
+  const targetPosition = useMemo(() => {
+    return new THREE.Vector3(x + width / 2, 0.5, 0)
   }, [x, y, width, height])
 
   const defaultScale = useMemo(() => {
@@ -85,10 +89,17 @@ function Card({
     )
   }, [width, height])
 
-  useFrame((_, dt) => {
+  useFrame((state, dt) => {
     if (meshRef.current) {
-      let distanceX = (cursorPosition.x - position.x) ** 2
-      let distanceY = (cursorPosition.y - position.y) ** 2
+      let distanceX = (cursorPosition.x - meshRef.current.position.x) ** 2
+      let distanceY = (cursorPosition.y - meshRef.current.position.y) ** 2
+
+      if (state.clock.elapsedTime > 1.1) {
+        targetPosition.y = y + height / 2
+      }
+
+      meshRef.current.position.lerp(targetPosition, 1 - Math.pow(0.005, dt))
+
       aspect > 1 ? (distanceX *= aspect ** 2) : (distanceY *= aspect ** 2)
 
       const distance = Math.sqrt(distanceX + distanceY)
@@ -109,7 +120,7 @@ function Card({
   return (
     <mesh
       ref={meshRef}
-      position={position}
+      position={initialPosition}
       scale={[width / MIN_SCALE_FACTOR, height / MIN_SCALE_FACTOR, 1]}
       material={material}
     >
