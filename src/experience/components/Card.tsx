@@ -2,11 +2,37 @@ import { useMemo, useRef } from "react"
 import * as THREE from "three"
 
 import { useCursorPosition } from "../../hooks/useCursorPosition"
-import { useFrame } from "@react-three/fiber"
+import { extend, useFrame, useLoader } from "@react-three/fiber"
+
+import { shaderMaterial } from "@react-three/drei"
+
+import vertex from "../../shaders/card/vertex.glsl"
+import fragment from "../../shaders/card/fragment.glsl"
+
+const CardShaderMaterial = shaderMaterial({}, vertex, fragment)
+
+extend({ CardShaderMaterial })
 
 const MIN_SCALE_FACTOR = 3
 const MAX_SCALE_FACTOR = 3
-const DISTANCE_FACTOR = 10
+const DISTANCE_FACTOR = 8
+
+const randomTexture = () => {
+  const textures = [
+    "/textures/img1.webp",
+    "/textures/img2.webp",
+    "/textures/img4.webp",
+    "/textures/img6.webp",
+    "/textures/img8.webp",
+    "/textures/img10.webp",
+    "/textures/img3.webp",
+    "/textures/img5.webp",
+    "/textures/img7.webp",
+    "/textures/img9.webp",
+  ]
+
+  return textures[Math.floor(Math.random() * textures.length)]
+}
 
 function Card({
   x,
@@ -21,21 +47,32 @@ function Card({
 }) {
   const meshRef = useRef<THREE.Mesh>(null)
 
+  const texture = useLoader(THREE.TextureLoader, randomTexture())
+
+  const material = useMemo(() => {
+    const material = new CardShaderMaterial()
+
+    material.uniforms.uTexture = new THREE.Uniform(texture)
+    material.uniforms.uDistance = new THREE.Uniform(1)
+
+    return material
+  }, [])
+
   const targetScale = useMemo(() => {
     return new THREE.Vector3()
   }, [])
 
   const cursorPosition = useCursorPosition()
 
-  const randomColorMaterial = useMemo(() => {
-    const r = Math.ceil(Math.random() * 255)
-    const g = Math.ceil(Math.random() * 255)
-    const b = Math.ceil(Math.random() * 255)
+  // const randomColorMaterial = useMemo(() => {
+  //   const r = Math.ceil(Math.random() * 255)
+  //   const g = Math.ceil(Math.random() * 255)
+  //   const b = Math.ceil(Math.random() * 255)
 
-    return new THREE.MeshBasicMaterial({
-      color: new THREE.Color(`rgb(${r}, ${g}, ${b})`),
-    })
-  }, [])
+  //   return new THREE.MeshBasicMaterial({
+  //     color: new THREE.Color(`rgb(${r}, ${g}, ${b})`),
+  //   })
+  // }, [])
 
   const position = useMemo(() => {
     return new THREE.Vector3(x + width / 2, y + height / 2, 0)
@@ -80,7 +117,7 @@ function Card({
       ref={meshRef}
       position={position}
       scale={[width / MIN_SCALE_FACTOR, height / MIN_SCALE_FACTOR, 1]}
-      material={randomColorMaterial}
+      material={material}
     >
       <planeGeometry args={[1, 1]} />
     </mesh>
