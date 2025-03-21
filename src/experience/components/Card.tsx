@@ -4,7 +4,8 @@ import * as THREE from "three"
 import { useCursorPosition } from "../../hooks/useCursorPosition"
 import { useFrame } from "@react-three/fiber"
 
-const SCALE_FACTOR = 3
+const MIN_SCALE_FACTOR = 3
+const MAX_SCALE_FACTOR = 3
 const DISTANCE_FACTOR = 10
 
 function Card({
@@ -41,11 +42,19 @@ function Card({
   }, [x, y, width, height])
 
   const defaultScale = useMemo(() => {
-    return new THREE.Vector3(width, height, 1)
+    return new THREE.Vector3(
+      width / MIN_SCALE_FACTOR,
+      height / MIN_SCALE_FACTOR,
+      1
+    )
   }, [width, height])
 
   const maxScale = useMemo(() => {
-    return new THREE.Vector3(SCALE_FACTOR * width, SCALE_FACTOR * height, 1)
+    return new THREE.Vector3(
+      MAX_SCALE_FACTOR * width,
+      MAX_SCALE_FACTOR * height,
+      1
+    )
   }, [width, height])
 
   useFrame((_, dt) => {
@@ -55,7 +64,11 @@ function Card({
           (cursorPosition.y - position.y) ** 2
       )
 
-      targetScale.lerpVectors(defaultScale, maxScale, Math.max(1 - distance * DISTANCE_FACTOR, 0))
+      targetScale.lerpVectors(
+        defaultScale,
+        maxScale,
+        Math.max(1 - distance * DISTANCE_FACTOR, 0)
+      )
 
       meshRef.current.scale.lerp(targetScale, 1 - Math.pow(0.005, dt))
       meshRef.current.position.z = 1 - distance
@@ -66,7 +79,7 @@ function Card({
     <mesh
       ref={meshRef}
       position={position}
-      scale={[width, height, 1]}
+      scale={[width / MIN_SCALE_FACTOR, height / MIN_SCALE_FACTOR, 1]}
       material={randomColorMaterial}
     >
       <planeGeometry args={[1, 1]} />
