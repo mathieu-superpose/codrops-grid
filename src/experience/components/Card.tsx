@@ -14,8 +14,8 @@ const CardShaderMaterial = shaderMaterial({}, vertex, fragment)
 extend({ CardShaderMaterial })
 
 const MIN_SCALE_FACTOR = 3
-const MAX_SCALE_FACTOR = 3
-const DISTANCE_FACTOR = 8
+const MAX_SCALE_FACTOR = 4
+const DISTANCE_FACTOR = 6
 
 const randomTexture = () => {
   const textures = [

@@ -5,7 +5,7 @@ varying vec2 vUv;
 
 vec3 getLuminance(vec3 color) {
     // vec3 luminance = vec3(0.2126, 0.7152, 0.0722);
-    vec3 luminance = vec3(0.2, 0.75, 0.1);
+    vec3 luminance = vec3(0.2, 0.75, 0.1) / 2.;
     return vec3(dot(luminance, color));
 }
 
