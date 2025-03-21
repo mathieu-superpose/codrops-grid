@@ -4,7 +4,8 @@ import * as THREE from "three"
 import { useCursorPosition } from "../../hooks/useCursorPosition"
 import { useFrame } from "@react-three/fiber"
 
-const MAX_SCALE = 3
+const SCALE_FACTOR = 3
+const DISTANCE_FACTOR = 10
 
 function Card({
   x,
@@ -18,6 +19,10 @@ function Card({
   height: number
 }) {
   const meshRef = useRef<THREE.Mesh>(null)
+
+  const targetScale = useMemo(() => {
+    return new THREE.Vector3()
+  }, [])
 
   const cursorPosition = useCursorPosition()
 
@@ -35,20 +40,25 @@ function Card({
     return new THREE.Vector3(x + width / 2, y + height / 2, 0)
   }, [x, y, width, height])
 
-  useFrame(() => {
+  const defaultScale = useMemo(() => {
+    return new THREE.Vector3(width, height, 1)
+  }, [width, height])
+
+  const maxScale = useMemo(() => {
+    return new THREE.Vector3(SCALE_FACTOR * width, SCALE_FACTOR * height, 1)
+  }, [width, height])
+
+  useFrame((_, dt) => {
     if (meshRef.current) {
       const distance = Math.sqrt(
         (cursorPosition.x - position.x) ** 2 +
           (cursorPosition.y - position.y) ** 2
       )
 
-      if (distance < 0.1) {
-        meshRef.current.scale.set(MAX_SCALE * width, MAX_SCALE * height, 1)
-        meshRef.current.position.z = 1 - distance
-      } else {
-        meshRef.current.scale.set(width, height, 1)
-        meshRef.current.position.z = 0
-      }
+      targetScale.lerpVectors(defaultScale, maxScale, Math.max(1 - distance * DISTANCE_FACTOR, 0))
+
+      meshRef.current.scale.lerp(targetScale, 1 - Math.pow(0.005, dt))
+      meshRef.current.position.z = 1 - distance
     }
   })
 
