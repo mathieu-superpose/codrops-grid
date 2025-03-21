@@ -64,16 +64,6 @@ function Card({
 
   const cursorPosition = useCursorPosition()
 
-  // const randomColorMaterial = useMemo(() => {
-  //   const r = Math.ceil(Math.random() * 255)
-  //   const g = Math.ceil(Math.random() * 255)
-  //   const b = Math.ceil(Math.random() * 255)
-
-  //   return new THREE.MeshBasicMaterial({
-  //     color: new THREE.Color(`rgb(${r}, ${g}, ${b})`),
-  //   })
-  // }, [])
-
   const position = useMemo(() => {
     return new THREE.Vector3(x + width / 2, y + height / 2, 0)
   }, [x, y, width, height])
@@ -109,6 +99,8 @@ function Card({
 
       meshRef.current.scale.lerp(targetScale, 1 - Math.pow(0.005, dt))
       meshRef.current.position.z = 1 - distance
+
+      material.uniforms.uDistance.value = distance * 10
     }
   })
 
