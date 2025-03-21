@@ -1,23 +1,18 @@
-import * as THREE from "three"
-
-import Environment from "./Environment"
-import Cube from "./components/Cube"
-import Crown from "./components/Crown"
-
-const ambientLightIntensity = 0.5
-const directionalLightPosition = new THREE.Vector3(5, 5, 5)
+import Grid from "./components/Grid"
+import { OrthographicCamera } from "@react-three/drei"
 
 function Scene() {
   return (
     <>
-      <Environment
-        ambientLightIntensity={ambientLightIntensity}
-        directionalLightPosition={directionalLightPosition}
-      />
-      <Cube />
-      <Crown
-        ambientLightIntensity={ambientLightIntensity}
-        directionalLightPosition={directionalLightPosition}
+      <Grid />
+      
+      <OrthographicCamera
+        makeDefault
+        position={[0, 0, 1]}
+        left={0}
+        right={1}
+        top={1}
+        bottom={0}
       />
     </>
   )
