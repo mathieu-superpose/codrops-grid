@@ -45,6 +45,7 @@ function Card({
   width: number
   height: number
 }) {
+  const aspect = width / height
   const meshRef = useRef<THREE.Mesh>(null)
 
   const texture = useLoader(THREE.TextureLoader, randomTexture())
@@ -86,10 +87,11 @@ function Card({
 
   useFrame((_, dt) => {
     if (meshRef.current) {
-      const distance = Math.sqrt(
-        (cursorPosition.x - position.x) ** 2 +
-          (cursorPosition.y - position.y) ** 2
-      )
+      let distanceX = (cursorPosition.x - position.x) ** 2
+      let distanceY = (cursorPosition.y - position.y) ** 2
+      aspect > 1 ? (distanceX *= aspect ** 2) : (distanceY *= aspect ** 2)
+
+      const distance = Math.sqrt(distanceX + distanceY)
 
       targetScale.lerpVectors(
         defaultScale,
