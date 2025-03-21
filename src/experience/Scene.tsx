@@ -8,7 +8,7 @@ function Scene() {
       
       <OrthographicCamera
         makeDefault
-        position={[0, 0, 1]}
+        position={[0, 0, 10]}
         left={0}
         right={1}
         top={1}
