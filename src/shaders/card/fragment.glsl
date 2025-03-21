@@ -15,15 +15,29 @@ vec3 alteredColors(vec3 inputColor) {
     return inputColor * Mat;
 }
 
+float roundedBoxSDF(vec2 CenterPosition, vec2 Size, float Radius) {
+    vec2 q = abs(CenterPosition) - Size + Radius;
+    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - Radius;
+}
+
 void main() {
     vec4 image = texture(uTexture, vUv);
     float distanceFactor = min(max(uDistance, 0.), 1.);
 
     vec3 imageLum = getLuminance(image.xyz);
-
     vec3 texColor = alteredColors(image.xyz);
-
     vec3 color = mix(texColor, imageLum, distanceFactor);
 
-    gl_FragColor = vec4(color, 1.0);
+    // Rounded corners logic
+    vec2 boxCenter = vec2(0.5); // Center of the box in UV space
+    vec2 boxSize = vec2(0.4);   // Size of the box (width and height)
+    float cornerRadius = 0.1;   // Radius of the rounded corners
+    float edgeSoftness = 0.001;  // Softness of the edges
+
+    float distance = roundedBoxSDF(vUv - boxCenter, boxSize, cornerRadius);
+    float smoothedAlpha = 1.0 - smoothstep(0.0, edgeSoftness, distance);
+
+    vec4 finalColor = vec4(color, smoothedAlpha * image.a);
+
+    gl_FragColor = finalColor;
 }

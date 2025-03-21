@@ -1,4 +1,4 @@
-import { use, useMemo, useRef } from "react"
+import { useMemo, useRef } from "react"
 import * as THREE from "three"
 
 import { useCursorPosition } from "../../hooks/useCursorPosition"
@@ -59,6 +59,8 @@ function Card({
 
     material.uniforms.uTexture = new THREE.Uniform(texture)
     material.uniforms.uDistance = new THREE.Uniform(1)
+
+    material.transparent = true
 
     return material
   }, [])
