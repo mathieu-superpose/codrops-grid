@@ -49,7 +49,8 @@ function Card({
     return new THREE.Vector3(0.0, 0.5, 0.5)
   }, [])
 
-  const aspect = width / height
+  const aspect = useMemo(() => width / height, [width, height]) //
+
   const meshRef = useRef<THREE.Mesh>(null)
 
   const texture = useLoader(THREE.TextureLoader, randomTexture())

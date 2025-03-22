@@ -1,21 +1,23 @@
 import { useMemo } from "react"
 
+import { useWindowSize } from "../../hooks/useWindowSize"
+
 import Card from "./Card"
 
 function Grid() {
-  const columns = useMemo(() => {
-    return Math.max(Math.floor(window.innerWidth / 75), 1)
-  }, [window.innerWidth])
-
-  const rows = useMemo(() => {
-    return Math.max(Math.floor(window.innerHeight / 75), 1)
-  }, [window.innerHeight])
+  const windowSize = useWindowSize()
 
   const cardProps = useMemo(() => {
+    const columns = Math.max(Math.floor(windowSize.width / 75), 1)
+    const rows = Math.max(Math.floor(windowSize.height / 75), 1)
+
     const positions = []
 
-    for (let i = 4; i < columns - 4; i++) {
-      for (let j = 4; j < rows - 4; j++) {
+    const startColumn = Math.min(4, columns)
+    const startRow = Math.min(4, rows)
+
+    for (let i = startRow; i < columns - startRow; i++) {
+      for (let j = startColumn; j < rows - startColumn; j++) {
         positions.push({
           x: i / columns,
           y: j / rows,
@@ -26,7 +28,7 @@ function Grid() {
     }
 
     return positions
-  }, [columns, rows])
+  }, [windowSize])
 
   return (
     <group>
