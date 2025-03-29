@@ -19,16 +19,16 @@ const DISTANCE_FACTOR = 6
 
 const randomTexture = () => {
   const textures = [
-    "/textures/img1.webp",
-    "/textures/img2.webp",
-    "/textures/img4.webp",
-    "/textures/img6.webp",
-    "/textures/img8.webp",
-    "/textures/img10.webp",
-    "/textures/img3.webp",
-    "/textures/img5.webp",
-    "/textures/img7.webp",
-    "/textures/img9.webp",
+    "textures/img1.webp",
+    "textures/img2.webp",
+    "textures/img4.webp",
+    "textures/img6.webp",
+    "textures/img8.webp",
+    "textures/img10.webp",
+    "textures/img3.webp",
+    "textures/img5.webp",
+    "textures/img7.webp",
+    "textures/img9.webp",
   ]
 
   return textures[Math.floor(Math.random() * textures.length)]
