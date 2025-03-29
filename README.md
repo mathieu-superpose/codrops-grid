@@ -2,6 +2,10 @@
 
 An adaptation of [Codrops tutorial](https://tympanus.net/codrops/2025/03/18/building-an-interactive-image-grid-with-three-js/) with React Three Fiber
 
+## Deployment
+
+[Try It](https://mathieu-superpose.github.io/codrops-grid/)
+
 ## Technology
 
 - Bundler: [Vite](https://vite.dev/)
